@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 /*  custom errors  */
 
-error VendingMachine__();
+error VendingMachine__ownerProperties(address owner);
 error VendingMachine__1();
 error VendingMachine__12();
 
@@ -26,7 +26,10 @@ contract VendingMachine {
 
     // because update the value --> don't use the view or pure
     function restock(uint256 _amount) public {
-        require(msg.sender == owner, "only the owner can restock this machine.");
+        // require(msg.sender == owner, "only the owner can restock this machine.");
+        if (msg.sender != owner) {
+            revert VendingMachine__ownerProperties(owner);
+        }
         donutBalances[address(this)] += _amount;
     }
 
