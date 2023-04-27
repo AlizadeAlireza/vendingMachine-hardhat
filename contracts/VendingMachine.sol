@@ -7,8 +7,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 /*  custom errors  */
 
 error VendingMachine__ownerProperties(address owner);
-error VendingMachine__1();
-error VendingMachine__12();
+error VendingMachine__payMoreEth(uint amount);
+error VendingMachine__NotEnoughDonut(uint remainDonut);
 
 contract VendingMachine {
     /*  variables  */
@@ -36,12 +36,18 @@ contract VendingMachine {
     // payable for receive ether
     function purchase(uint256 _amount) public payable {
         // we need to check purchaser send enough money
-        require(msg.value >= _amount * 2 ether, "You must pay at least 2 Ether per donut");
+        // require(msg.value >= _amount * 2 ether, "You must pay at least 2 Ether per donut");
+        if (msg.value < _amount * 2 ether) {
+            revert VendingMachine__payMoreEth(_amount * 2 ether);
+        }
         // enough donuts in the vending machine for requests
-        require(
-            donutBalances[address(this)] >= _amount,
-            "Not enough donut in stock to fulfill purchase request"
-        );
+        // require(
+        //     donutBalances[address(this)] >= _amount,
+        //     "Not enough donut in stock to fulfill purchase request"
+        // );
+        if (donutBalances[address(this)] < _amount) {
+            revert VendingMachine__NotEnoughDonut(donutBalances[address(this)]);
+        }
 
         donutBalances[address(this)] -= _amount;
         donutBalances[msg.sender] += _amount;
