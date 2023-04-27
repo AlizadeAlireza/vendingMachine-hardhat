@@ -24,12 +24,17 @@ contract VendingMachine {
     // anyone should be able to set amount of donut
     // getting total balance
 
-    // because update the value --> don't use the view or pure
-    function restock(uint256 _amount) public {
-        // require(msg.sender == owner, "only the owner can restock this machine.");
-        if (msg.sender != owner) {
+    modifier ownerProperties(address _user) {
+        if (_user != owner) {
             revert VendingMachine__ownerProperties(owner);
         }
+        _;
+    }
+
+    // because update the value --> don't use the view or pure
+    function restock(uint256 _amount) public ownerProperties(msg.sender) {
+        // require(msg.sender == owner, "only the owner can restock this machine.");
+
         donutBalances[address(this)] += _amount;
     }
 
@@ -41,10 +46,7 @@ contract VendingMachine {
             revert VendingMachine__payMoreEth(_amount * 2 ether);
         }
         // enough donuts in the vending machine for requests
-        // require(
-        //     donutBalances[address(this)] >= _amount,
-        //     "Not enough donut in stock to fulfill purchase request"
-        // );
+
         if (donutBalances[address(this)] < _amount) {
             revert VendingMachine__NotEnoughDonut(donutBalances[address(this)]);
         }
