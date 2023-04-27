@@ -51,15 +51,14 @@ describe("VendingMachine", function () {
 
     it("should not allow a purchase if there are not enough donuts in stock", async function () {
         const value = ethers.utils.parseEther((PURCHASED_DONUTS * DONUT_PRICE + 200).toString())
-        await expect(
-            vendingMachine.purchase(INITIAL_BALANCE + 1, { value })
-        ).to.be.revertedWithCustomError(vendingMachine, "VendingMachine__NotEnoughDonut")
+        await expect(vendingMachine.purchase(INITIAL_BALANCE + 1, { value }))
+            .to.be.revertedWithCustomError(vendingMachine, "VendingMachine__NotEnoughDonut")
+            .withArgs(await vendingMachine.getVendingMachineBalance())
     })
 
     it("should not allow a user instead owner to restock the balance", async () => {
-        await expect(vendingMachine.connect(user).restock(10)).to.be.revertedWithCustomError(
-            vendingMachine,
-            "VendingMachine__ownerProperties"
-        )
+        await expect(vendingMachine.connect(user).restock(10))
+            .to.be.revertedWithCustomError(vendingMachine, "VendingMachine__ownerProperties")
+            .withArgs(owner.address)
     })
 })
