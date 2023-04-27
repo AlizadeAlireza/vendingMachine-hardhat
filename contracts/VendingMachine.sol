@@ -33,15 +33,13 @@ contract VendingMachine {
 
     // because update the value --> don't use the view or pure
     function restock(uint256 _amount) public ownerProperties(msg.sender) {
-        // require(msg.sender == owner, "only the owner can restock this machine.");
-
         donutBalances[address(this)] += _amount;
     }
 
     // payable for receive ether
     function purchase(uint256 _amount) public payable {
         // we need to check purchaser send enough money
-        // require(msg.value >= _amount * 2 ether, "You must pay at least 2 Ether per donut");
+
         if (msg.value < _amount * 2 ether) {
             revert VendingMachine__payMoreEth(_amount * 2 ether);
         }
