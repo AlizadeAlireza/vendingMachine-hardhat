@@ -12,6 +12,9 @@ describe("VendingMachine", function () {
     beforeEach(async function () {
         // deploy a new instance of VendingMachine
         ;[owner, user] = await ethers.getSigners()
+
+        // deploy contract
+
         const VendingMachine = await ethers.getContractFactory("VendingMachine")
         vendingMachine = await VendingMachine.deploy()
         await vendingMachine.deployed()
@@ -41,21 +44,22 @@ describe("VendingMachine", function () {
 
     it("should not allow a purchase if the user sends insufficient funds", async function () {
         const value = ethers.utils.parseEther((PURCHASED_DONUTS * DONUT_PRICE - 1).toString())
-        await expect(vendingMachine.purchase(PURCHASED_DONUTS, { value })).to.be.revertedWith(
-            "You must pay at least 2 Ether per donut"
-        )
+        await expect(
+            vendingMachine.purchase(PURCHASED_DONUTS, { value })
+        ).to.be.revertedWithCustomError(vendingMachine, "VendingMachine__payMoreEth")
     })
 
     it("should not allow a purchase if there are not enough donuts in stock", async function () {
         const value = ethers.utils.parseEther((PURCHASED_DONUTS * DONUT_PRICE + 200).toString())
-        await expect(vendingMachine.purchase(INITIAL_BALANCE + 1, { value })).to.be.revertedWith(
-            "Not enough donut in stock to fulfill purchase request"
-        )
+        await expect(
+            vendingMachine.purchase(INITIAL_BALANCE + 1, { value })
+        ).to.be.revertedWithCustomError(vendingMachine, "VendingMachine__NotEnoughDonut")
     })
 
     it("should not allow a user instead owner to restock the balance", async () => {
-        await expect(vendingMachine.connect(user).restock(10)).to.be.revertedWith(
-            "only the owner can restock this machine."
+        await expect(vendingMachine.connect(user).restock(10)).to.be.revertedWithCustomError(
+            vendingMachine,
+            "VendingMachine__ownerProperties"
         )
     })
 })
