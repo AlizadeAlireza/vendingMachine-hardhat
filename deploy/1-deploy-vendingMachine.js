@@ -22,4 +22,11 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         log: true,
         waitConfirmations: waitBlockConfirmations,
     })
+    if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
+        log("Verifying...")
+        await verify(nftMarketplace.address, arguments)
+    }
+    log("----------------------------------------------------")
 }
+
+module.exports.tags = ["all", "vendingMachine"]
