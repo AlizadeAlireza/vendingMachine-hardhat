@@ -14,4 +14,12 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         : VERIFICATION_BLOCK_CONFIRMATIONS
 
     log("-------------------------------------------")
+
+    const arguments = []
+    const vendingMachine = await deploy("VendingMachine", {
+        from: deployer,
+        args: arguments,
+        log: true,
+        waitConfirmations: waitBlockConfirmations,
+    })
 }
