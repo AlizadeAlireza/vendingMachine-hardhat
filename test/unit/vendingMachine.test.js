@@ -61,4 +61,7 @@ describe("VendingMachine", function () {
             .to.be.revertedWithCustomError(vendingMachine, "VendingMachine__ownerProperties")
             .withArgs(owner.address)
     })
+    it("should not trust to anyOne for anything, i know i can do it and just rely the god", async () => {})
+
+    it("another test is for us, for this thing that we can do it with better things", async () => {})
 })

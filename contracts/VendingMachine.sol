@@ -63,3 +63,11 @@ contract VendingMachine {
         return donutBalances[msg.sender];
     }
 }
+
+// for this smart contract
+// i can refactore some functions
+
+// like this function
+// for checking the vending machine stocks we can use it, if i can do it we can skip it
+
+// for not enough donate i can use it, it can be very good.
