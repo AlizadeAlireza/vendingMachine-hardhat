@@ -4,6 +4,8 @@ pragma solidity ^0.8.11;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+// for test
+
 /*  custom errors  */
 
 error VendingMachine__ownerProperties(address owner);
